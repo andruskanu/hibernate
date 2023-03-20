@@ -1,36 +1,37 @@
 package dao;
 
-import model.Project;
+import model.Employee;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import java.util.List;
 import java.util.Optional;
 
-public class ProjectRepository {
+public class EmployeeRepository {
 
     private SessionFactory sessionFactory;
 
-    public ProjectRepository(SessionFactory sessionFactory) {
+    public EmployeeRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    public Optional<Project> findById(int id) {
+    public Optional<Employee> findById(int id) {
         try (Session session = sessionFactory.openSession()) {
-            Project project = session.find(Project.class, id);
-            return Optional.ofNullable(project);
+            Employee employee = session.find(Employee.class, id);
+            return Optional.ofNullable(employee);
         }
     }
 
-    public void save(Project project) {
+    public void save(Employee employee) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = null;
             try {
                 transaction = session.beginTransaction();
-                session.persist(project);
+                session.persist(employee);
                 transaction.commit();
             } catch (Exception e) {
-                System.out.println("I couldn't insert the project because: " + e);
+                System.out.println("I couldn't insert the employee because: " + e);
                 if (transaction != null) {
                     transaction.rollback();
                 }
@@ -38,15 +39,15 @@ public class ProjectRepository {
         }
     }
 
-    public void delete(Project project) {
+    public void delete(Employee employee) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = null;
             try {
                 transaction = session.beginTransaction();
-                session.remove(project);
+                session.remove(employee);
                 transaction.commit();
             } catch (Exception e) {
-                System.out.println("I couldn't delete the project because: " + e);
+                System.out.println("I couldn't delete the employee because: " + e);
                 if (transaction != null) {
                     transaction.rollback();
                 }
@@ -54,19 +55,25 @@ public class ProjectRepository {
         }
     }
 
-    public void update(Project project) {
+    public void update(Employee employee) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = null;
             try {
                 transaction = session.beginTransaction();
-                session.merge(project);
+                session.merge(employee);
                 transaction.commit();
             } catch (Exception e) {
-                System.out.println("I couldn't update the project because: " + e);
+                System.out.println("I couldn't update the employee because: " + e);
                 if (transaction != null) {
                     transaction.rollback();
                 }
             }
+        }
+    }
+
+    public List<Employee> getAllEmployees() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("from Employee", Employee.class).list();
         }
     }
 }

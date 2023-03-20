@@ -2,6 +2,9 @@ package model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "project")
 public class Project {
@@ -9,10 +12,13 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
-    private Long id;
+    private Long projectId;
 
     @Column(name = "project_name")
     private String projectName;
+
+    @ManyToMany(mappedBy = "projects")
+    private Set<Employee> employees = new HashSet<>();
 
     public Project() {
     }
@@ -21,12 +27,12 @@ public class Project {
         this.projectName = projectName;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getProjectName() {
@@ -37,10 +43,18 @@ public class Project {
         this.projectName = projectName;
     }
 
+    public Set<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(Set<Employee> employees) {
+        this.employees = employees;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
-                "id=" + id +
+                "project_id=" + projectId +
                 ", projectName='" + projectName + '\'' +
                 '}';
     }
